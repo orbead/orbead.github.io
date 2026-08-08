@@ -518,9 +518,8 @@ section h2::after {
 }
 
 .product-modal-content img {
-  width: 200px;
-  height: auto;
-  border-radius: var(--radius-md);
+  width: 100%;
+  height: 180px;
 }
 
 .product-modal-details {
