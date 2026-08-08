@@ -1,0 +1,1275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Orbeads | Handmade Charms & Jewelry</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="style.css">
+
+  <!-- Supabase -->
+ <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+
+<body>
+
+  <!-- =========================
+       ANNOUNCEMENT BAR
+  ========================== -->
+
+  <div class="announcement-bar">
+    <p>
+      ✨ DELIVERY NATIONWIDE IN LESS THAN A WEEK ✨
+    </p>
+  </div>
+
+
+  <!-- =========================
+       NAVBAR
+  ========================== -->
+
+  <nav class="navbar">
+
+    <div class="logo">
+      Orbeads
+    </div>
+
+    <div class="nav-links">
+
+      <a href="#shop">Shop</a>
+
+      <a href="#about">About</a>
+
+      <a href="#contact">Contact</a>
+
+      <a href="#" id="cart-icon">
+        🛒 Cart (<span id="cart-count">0</span>)
+      </a>
+
+    </div>
+
+  </nav>
+
+
+  <!-- =========================
+       CART PANEL
+  ========================== -->
+
+  <div id="cart-panel" class="cart-panel">
+
+    <div class="cart-header">
+
+      <h3>Your Cart</h3>
+
+      <button id="close-cart">
+        ✕
+      </button>
+
+    </div>
+
+    <div id="cart-items"></div>
+
+    <div class="cart-footer">
+
+      <p id="cart-total">
+        Total: 0 Taka
+      </p>
+
+      <p id="delivery-note"></p>
+
+      <button id="buy-now-btn" class="btn-primary">
+        Buy Now
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <!-- =========================
+       CHECKOUT MODAL
+  ========================== -->
+
+  <div id="checkout-modal" class="checkout-modal">
+
+    <div class="checkout-box">
+
+      <div class="cart-header">
+
+        <h3>
+          Complete Your Order
+        </h3>
+
+        <button id="close-checkout">
+          ✕
+        </button>
+
+      </div>
+
+
+      <form id="checkout-form">
+
+        <label for="customer-name">
+          Name
+        </label>
+
+        <input
+          type="text"
+          id="customer-name"
+          required
+          placeholder="Your name"
+        >
+
+
+        <label for="customer-phone">
+          Phone Number
+        </label>
+
+        <input
+          type="tel"
+          id="customer-phone"
+          required
+          placeholder="01XXXXXXXXX"
+        >
+
+
+        <label for="customer-location">
+          Delivery Area
+        </label>
+
+        <select id="customer-location" required>
+          <option value="dhaka">Inside Dhaka (70 Taka)</option>
+          <option value="outside">Outside Dhaka (130 Taka)</option>
+        </select>
+
+
+        <label for="customer-address">
+          Delivery Address
+        </label>
+
+        <textarea
+          id="customer-address"
+          required
+          placeholder="Full address including area and city"
+        ></textarea>
+
+
+        <label for="social-account">
+          Instagram / Facebook Account (Optional)
+        </label>
+
+        <input
+          type="text"
+          id="social-account"
+          placeholder="@username or profile link (optional)"
+        >
+
+
+        <button
+          type="submit"
+          class="btn-primary"
+        >
+          Confirm Order
+        </button>
+
+      </form>
+
+    </div>
+
+  </div>
+
+
+  <!-- =========================
+       PRODUCT DETAILS MODAL
+  ========================== -->
+
+  <div id="product-modal" class="product-modal">
+
+    <div class="product-modal-box">
+
+      <button
+        id="close-product-modal"
+        class="close-modal-btn"
+      >
+        ✕
+      </button>
+
+      <div class="product-modal-content">
+
+        <img
+          id="modal-product-img"
+          src=""
+          alt="Product Image"
+        >
+
+        <div class="product-modal-details">
+
+          <h2 id="modal-product-title"></h2>
+
+          <p
+            id="modal-product-price"
+            class="price"
+          ></p>
+
+          <p id="modal-product-description">
+            Handmade with care, perfect for everyday style.
+          </p>
+
+          <div
+            id="modal-type-container"
+            class="modal-type-container"
+          >
+
+            <label for="modal-product-type">
+              Choose Type:
+            </label>
+
+            <select id="modal-product-type"></select>
+
+          </div>
+
+          <button
+            id="modal-add-to-cart-btn"
+            class="btn-primary"
+          >
+            Add to Cart
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- =========================
+       HERO
+  ========================== -->
+
+  <section class="hero">
+
+    <h1>
+      Okay But Make It Beaded
+    </h1>
+
+    <p>
+      Beads that turn "just an accessory"
+      into "where did you get that?"
+    </p>
+
+    <a
+      href="#shop"
+      class="btn-primary"
+    >
+      Shop Now
+    </a>
+
+  </section>
+
+
+  <!-- =========================
+       SHOP BY COLLECTION
+  ========================== -->
+
+  <section
+    class="collections"
+    id="collections"
+  >
+
+    <h2>
+      Shop by Collection
+    </h2>
+
+    <div class="collection-list">
+
+      <div
+        class="collection-card active"
+        data-category="all"
+      >
+        <div class="collection-card-icon">
+          ✨
+        </div>
+
+        <h3>
+          All Products
+        </h3>
+
+        <p>
+          Browse our entire handmade collection.
+        </p>
+      </div>
+
+
+      <div
+        class="collection-card"
+        data-category="bracelets"
+      >
+
+        <img
+          src="images/goldpearl-bracelet.jpg"
+          alt="Bracelets collection"
+        >
+
+        <h3>
+          Bracelets
+        </h3>
+
+        <p>
+          Delicate beaded and pearl arm candy.
+        </p>
+
+      </div>
+
+
+      <div
+        class="collection-card"
+        data-category="earrings"
+      >
+
+        <img
+          src="images/goldenearrings.jpg"
+          alt="Earrings collection"
+        >
+
+        <h3>
+          Earrings
+        </h3>
+
+        <p>
+          Statement pieces, handmade with care.
+        </p>
+
+      </div>
+
+
+      <div
+        class="collection-card"
+        data-category="phone-charms"
+      >
+
+        <img
+          src="images/peach.jpg"
+          alt="Phone charms collection"
+        >
+
+        <h3>
+          Phone Charms
+        </h3>
+
+        <p>
+          Small details, big personality.
+        </p>
+
+      </div>
+
+
+      <div
+        class="collection-card"
+        data-category="keychains"
+      >
+
+        <img
+          src="images/whitekeychainsandcharms.jpg"
+          alt="Keychains collection"
+        >
+
+        <h3>
+          Keychains & Bag Charms
+        </h3>
+
+        <p>
+          Delicate, handmade, one of a kind.
+        </p>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- =========================
+       FEATURED PRODUCT
+  ========================== -->
+
+  <section
+    class="featured"
+    id="featured"
+  >
+
+    <img
+      src="images/blueearrings.jpg"
+      alt="Blue Earrings"
+    >
+
+    <div
+      class="featured-info"
+      data-name="Blue Earrings"
+      data-price="350"
+      data-stock="5"
+      data-category="earrings"
+    >
+
+      <p class="label">
+        FEATURED PRODUCT
+      </p>
+
+      <h2>
+        Blue Earrings
+      </h2>
+
+      <p>
+        Careful, these little blue earrings might just become
+        your new favorite obsession.
+      </p>
+
+      <p class="price">
+        350 Taka
+      </p>
+
+      <button class="add-to-cart-btn">
+        Add to Cart
+      </button>
+
+    </div>
+
+  </section>
+
+
+  <!-- =========================
+       SHOP / PRODUCTS
+  ========================== -->
+
+  <section
+    class="products"
+    id="shop"
+  >
+
+    <h2 id="shop-title">
+      Fresh Drops and Bestsellers
+    </h2>
+
+    <div class="product-list">
+
+
+      <!-- BRACELETS -->
+
+      <div
+        class="product"
+        data-category="bracelets"
+        data-name="Beaded Gold Bracelet"
+        data-price="120"
+        data-stock="3"
+        data-description="A warm, golden beaded accent designed to add subtle radiance to your wrist stack."
+      >
+
+        <img
+          src="images/goldpearl-bracelet.jpg"
+          alt="Gold pearl bracelet"
+        >
+
+        <div class="product-info">
+
+          <h3>
+            Beaded Gold Bracelet
+          </h3>
+
+          <p>
+            120 Taka
+          </p>
+
+        </div>
+
+        <button class="open-modal-btn">
+          View Details
+        </button>
+
+      </div>
+
+
+      <div
+        class="product"
+        data-category="bracelets"
+        data-name="Hearty Pearls Bracelet"
+        data-price="160"
+        data-stock="5"
+        data-description="Classic pearls reimagined with a sweet, cozy twist for romantic everyday vibes."
+      >
+
+        <img
+          src="images/pearl-bracelet.jpg"
+          alt="Pearl bracelet"
+        >
+
+        <div class="product-info">
+
+          <h3>
+            Hearty Pearls Bracelet
+          </h3>
+
+          <p>
+            160 Taka
+          </p>
+
+        </div>
+
+        <button class="open-modal-btn">
+          View Details
+        </button>
+
+      </div>
+
+
+      <div
+        class="product"
+        data-category="bracelets"
+        data-name="Pearl and Wirework Collection"
+        data-price="150"
+        data-stock="11"
+        data-description="Intricate handmade wire designs wrapped around luminous pearls for an ethereal feel."
+      >
+
+        <img
+          src="images/wirepearl-bracelets.jpg"
+          alt="Pearl and wirework bracelets"
+        >
+
+        <div class="product-info">
+
+          <h3>
+            Pearl and Wirework Collection
+          </h3>
+
+          <p>
+            150 Taka
+          </p>
+
+          <select
+            class="product-type"
+            style="display:none;"
+          >
+
+            <option value="">
+              -- Select Type --
+            </option>
+
+            <option
+              value="Wire-spiral and pearl"
+              data-stock="5"
+            >
+              Wire-spiral and pearl 
+            </option>
+
+            <option
+              value="Shell pearl"
+              data-stock="1"
+            >
+              Shell pearl 
+            </option>
+
+            <option
+              value="Silver shell"
+              data-stock="1"
+            >
+              Silver shell
+            </option>
+
+            <option
+              value="Wire-bow pearl"
+              data-stock="4"
+            >
+              Wire-bow pearl 
+            </option>
+
+          </select>
+
+        </div>
+
+        <button class="open-modal-btn">
+          View Details
+        </button>
+
+      </div>
+
+
+      <!-- EARRINGS -->
+
+      <div
+        class="product"
+        data-category="earrings"
+        data-name="Blue Earrings"
+        data-price="350"
+        data-stock="4"
+        data-description="Vibrant blue beaded hoops with delicate dangles that catch light from every angle."
+      >
+
+        <img
+          src="images/blueearrings.jpg"
+          alt="Blue earrings"
+        >
+
+        <div class="product-info">
+
+          <h3>
+            Blue Earrings
+          </h3>
+
+          <p>
+            350 Taka
+          </p>
+
+        </div>
+
+        <button class="open-modal-btn">
+          View Details
+        </button>
+
+      </div>
+
+
+      <div
+        class="product"
+        data-category="earrings"
+        data-name="Golden Chandelier Earrings"
+        data-price="200"
+        data-stock="4"
+        data-description="Elegant cascade dangling design that instantly elevates any outfit for special nights out."
+      >
+
+        <img
+          src="images/goldenearrings.jpg"
+          alt="Golden chandelier earrings"
+        >
+
+        <div class="product-info">
+
+          <h3>
+            Golden Chandelier Earrings
+          </h3>
+
+          <p>
+            200 Taka
+          </p>
+
+        </div>
+
+        <button class="open-modal-btn">
+          View Details
+        </button>
+
+      </div>
+
+
+      <!-- KEYCHAINS & BAG CHARMS -->
+
+      <div
+        class="product"
+        data-category="keychains"
+        data-name="Pearls and Bows"
+        data-price="150"
+        data-stock="12"
+        data-description="Dreamy coquette-inspired bag charms and phone straps featuring delicate bow motifs."
+      >
+
+        <img
+          src="images/whitekeychainsandcharms.jpg"
+          alt="Pearls and Bows"
+        >
+
+        <div class="product-info">
+
+          <h3>
+            Pearls and Bows
+          </h3>
+
+          <p>
+            150 Taka
+          </p>
+
+          <select
+            class="product-type"
+            style="display:none;"
+          >
+
+            <option value="">
+              -- Select Type --
+            </option>
+
+            <option
+              value="Beaded-bow bag charm"
+              data-stock="5"
+            >
+              Beaded-bow bag charm 
+            </option>
+
+            <option
+              value="Bow bag charm"
+              data-stock="1"
+            >
+              Bow bag charm 
+            </option>
+
+            <option
+              value="Beaded-bow phone charm"
+              data-stock="5"
+            >
+              Beaded-bow phone charm 
+            </option>
+
+            <option
+              value="Bow phone charm"
+              data-stock="1"
+            >
+              Bow phone charm 
+            </option>
+
+            <option
+              value="Beaded phone-charm strap"
+              data-stock="1"
+            >
+              Beaded phone-charm strap 
+            </option>
+
+          </select>
+
+        </div>
+
+        <button class="open-modal-btn">
+          View Details
+        </button>
+
+      </div>
+
+
+      <div
+        class="product"
+        data-category="keychains"
+        data-name="Spiderman & Palestine Key Chain"
+        data-price="170"
+        data-stock="6"
+        data-description="Beaded keychains featuring an iconic hero and the holy land."
+      >
+
+        <img
+          src="images/spidermanpalestine.jpg"
+          alt="Spiderman & Palestine key chain"
+        >
+
+        <div class="product-info">
+
+          <h3>
+            Spiderman & Palestine Key Chain
+          </h3>
+
+          <p>
+            170 Taka
+          </p>
+
+          <select
+            class="product-type"
+            style="display:none;"
+          >
+
+            <option value="">
+              -- Select Type --
+            </option>
+
+            <option
+              value="Spiderman mask"
+              data-stock="3"
+            >
+              Spiderman mask
+            </option>
+
+            <option
+              value="Palestine flag"
+              data-stock="3"
+            >
+              Palestine flag 
+            </option>
+
+          </select>
+
+        </div>
+
+        <button class="open-modal-btn">
+          View Details
+        </button>
+
+      </div>
+
+
+      <!-- PHONE CHARMS -->
+
+      <div
+        class="product"
+        data-category="phone-charms"
+        data-name="Spider-Gwen Phone Charm"
+        data-price="120"
+        data-stock="4"
+        data-description="Pink, white, and black beaded charm inspired by Ghost-Spider aesthetic."
+      >
+
+        <img
+          src="images/gwenphonecharm.jpg"
+          alt="Spider-Gwen phone charm"
+        >
+
+        <div class="product-info">
+
+          <h3>
+            Spider-Gwen Phone Charm
+          </h3>
+
+          <p>
+            120 Taka
+          </p>
+
+        </div>
+
+        <button class="open-modal-btn">
+          View Details
+        </button>
+
+      </div>
+
+
+      <div
+        class="product"
+        data-category="phone-charms"
+        data-name="Butterfly Phone Charm"
+        data-price="160"
+        data-stock="2"
+        data-description="Whimsical iridescent butterfly accents that bring pastel aesthetic joy to your phone."
+      >
+
+        <img
+          src="images/butterfly.jpg"
+          alt="Butterfly Phone Charm"
+        >
+
+        <div class="product-info">
+
+          <h3>
+            Butterfly Phone Charm
+          </h3>
+
+          <p>
+            160 Taka
+          </p>
+
+          <select
+            class="product-type"
+            style="display:none;"
+          >
+
+            <option value="">
+              -- Select Type --
+            </option>
+
+            <option
+              value="Lilac butterfly"
+              data-stock="1"
+            >
+              Lilac butterfly 
+            </option>
+
+            <option
+              value="Green butterfly"
+              data-stock="2"
+            >
+              Green butterfly 
+            </option>
+
+          </select>
+
+        </div>
+
+        <button class="open-modal-btn">
+          View Details
+        </button>
+
+      </div>
+
+
+      <div
+        class="product"
+        data-category="phone-charms"
+        data-name="Yellow and Lilac Phone Charm"
+        data-price="160"
+        data-stock="2"
+        data-description="Soft pastel aesthetic beaded loop strap—choose between honey yellow or soothing lilac shades!"
+      >
+
+        <img
+          src="images/yellowlilac.jpg"
+          alt="Yellow and lilac phone charm"
+        >
+
+        <div class="product-info">
+
+          <h3>
+            Yellow and Lilac Phone Charm
+          </h3>
+
+          <p>
+            160 Taka
+          </p>
+
+          <select
+            class="product-type"
+            style="display:none;"
+          >
+
+            <option value="">
+              -- Select Type --
+            </option>
+
+            <option
+              value="Yellow phone charm"
+              data-stock="1"
+            >
+              Yellow phone charm 
+            </option>
+
+            <option
+              value="Lilac phone charm"
+              data-stock="1"
+            >
+              Lilac phone charm 
+            </option>
+
+          </select>
+
+        </div>
+
+        <button class="open-modal-btn">
+          View Details
+        </button>
+
+      </div>
+
+
+      <div
+        class="product"
+        data-category="phone-charms"
+        data-name="Sanrio Phone Charm"
+        data-price="150"
+        data-stock="2"
+        data-description="Ultra-cute character charm loops featuring your favorite Sanrio friends."
+      >
+
+        <img
+          src="images/sanrio.jpg"
+          alt="Sanrio phone charm"
+        >
+
+        <div class="product-info">
+
+          <h3>
+            Sanrio Phone Charm
+          </h3>
+
+          <p>
+            150 Taka
+          </p>
+
+          <select
+            class="product-type"
+            style="display:none;"
+          >
+
+            <option value="">
+              -- Select Type --
+            </option>
+
+            <option
+              value="My Melody"
+              data-stock="1"
+            >
+              My Melody
+            </option>
+
+            <option
+              value="Pompompurin"
+              data-stock="1"
+            >
+              Pompompurin
+            </option>
+
+          </select>
+
+        </div>
+
+        <button class="open-modal-btn">
+          View Details
+        </button>
+
+      </div>
+
+
+      <div
+        class="product"
+        data-category="phone-charms"
+        data-name="Peach Phone Charm"
+        data-price="150"
+        data-stock="3"
+        data-description="Adorable sweet peach glass beads strung on a durable hanging cord."
+      >
+
+        <img
+          src="images/peachphonecharm.jpg"
+          alt="Peach phone charm"
+        >
+
+        <div class="product-info">
+
+          <h3>
+            Peach Phone Charm
+          </h3>
+
+          <p>
+            150 Taka
+          </p>
+
+        </div>
+
+        <button class="open-modal-btn">
+          View Details
+        </button>
+
+      </div>
+
+    </div>
+
+  </section>
+  <!-- =========================
+       WHY SHOP WITH US
+  ========================== -->
+
+  <section class="why-us">
+
+    <h2>
+      Why Shop With Us
+    </h2>
+
+    <div class="why-list">
+
+      <div class="why-item">
+
+        <p class="icon">
+          🤍
+        </p>
+
+        <h3>
+          Handmade
+        </h3>
+
+        <p>
+          Every piece strung by hand, not mass produced.
+        </p>
+
+      </div>
+
+
+      <div class="why-item">
+
+        <p class="icon">
+          🚚
+        </p>
+
+        <h3>
+          Fast Delivery
+        </h3>
+
+        <p>
+          Orders shipped all over Bangladesh in less than a week.
+        </p>
+
+      </div>
+
+
+      <div class="why-item">
+
+        <p class="icon">
+          💬
+        </p>
+
+        <h3>
+          Easy Ordering
+        </h3>
+
+        <p>
+          Add to cart and check out right on the site.
+        </p>
+
+      </div>
+
+
+      <div class="why-item">
+
+        <p class="icon">
+          ✨
+        </p>
+
+        <h3>
+          Real Support
+        </h3>
+
+        <p>
+          Real replies from a real person, always.
+        </p>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- =========================
+       ABOUT
+  ========================== -->
+
+  <section
+    class="about"
+    id="about"
+  >
+
+    <h2>
+      About Orbead
+    </h2>
+
+    <p>
+      Orbead is a small handmade jewelry brand based in Dhaka,
+      Bangladesh. Every earring, charm, bracelet, and keychain
+      is designed and put together by hand — no mass production,
+      just real pieces made with care.
+    </p>
+
+  </section>
+
+
+  <!-- =========================
+       ADDRESS
+  ========================== -->
+
+  <section class="address">
+
+    <h2>
+      Find Us
+    </h2>
+
+    <p>
+      Based in Dhaka, Bangladesh
+    </p>
+
+  </section>
+
+
+  <!-- =========================
+       FAQ
+  ========================== -->
+
+  <section class="faq">
+
+    <h2>
+      Frequently Asked Questions
+    </h2>
+
+
+    <details>
+
+      <summary>
+        How do I place an order?
+      </summary>
+
+      <p>
+        Shop directly on our website. Need custom options or have special instructions? DM us on Instagram or Facebook Messenger!
+      </p>
+
+    </details>
+
+
+    <details>
+
+      <summary>
+        How to take care of my jewelry?
+      </summary>
+
+      <p>
+        Keep them in a dry place, and handle them gently.
+      </p>
+
+    </details>
+
+
+    <details>
+
+      <summary>
+        Can I customize a charm or bracelet?
+      </summary>
+
+      <p>
+        Yes, DM us your idea and we'll let you know if it's possible.
+      </p>
+
+    </details>
+
+
+    <details>
+
+      <summary>
+        Can I track my order?
+      </summary>
+
+      <p>
+        Yes, you'll receive an SMS with tracking details once your order is dispatched.
+      </p>
+
+    </details>
+
+  </section>
+
+
+  <!-- =========================
+       FOOTER
+  ========================== -->
+
+  <footer id="contact">
+
+    <div class="footer-col">
+
+      <h3>
+        Contact
+      </h3>
+
+      <p>
+        Instagram: @orbeadjewellery
+      </p>
+
+      <p>
+        Facebook: @Orbead
+      </p>
+
+    </div>
+
+  </footer>
+
+
+  <!-- =========================
+       JAVASCRIPT
+  ========================== -->
+
+  <script src="script.js"></script>
+
+</body>
+</html>
