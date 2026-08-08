@@ -349,7 +349,7 @@ section h2::after {
   height: 200px; /* Locked height so images remain identical across categories */
   object-fit: contain; /* Shows the full image instead of cropping it */
   background-color: var(--white);
-  border-radius: 10px;
+  border-radius: var(--radius-md);
   transition: transform 0.4s ease;
 }
 
@@ -524,7 +524,7 @@ section h2::after {
   height: 220px;
   object-fit: contain; /* Shows the full image instead of cropping it */
   background-color: var(--white);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-lg);
 }
 
 .product-modal-details {
@@ -936,11 +936,11 @@ footer p {
   }
 
   .product {
-    height: 330px;
+    height: 360px;
   }
 
   .product img {
-    height: 150px;
+    height: 180px;
   }
 }
 
@@ -993,11 +993,11 @@ footer p {
 
   .product {
     padding: 12px;
-    height: 290px;
+    height: 320px;
   }
 
   .product img {
-    height: 120px;
+    height: 150px;
   }
 
   .product-info h3 {
