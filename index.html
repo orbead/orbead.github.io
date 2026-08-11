@@ -13,23 +13,26 @@
   <!-- CSS -->
   <link rel="stylesheet" href="style.css">
   <style>
-    /* credit line — inherits the footer's own color/font so it blends in
-       rather than introducing a new color that might clash */
-    .footer-col .credit-link{
-      font-family:inherit;
-      font-size:.85em;
-      opacity:.75;
-      text-decoration:underline;
-      text-underline-offset:3px;
-      transition:opacity .25s ease;
+    /* Footer links styling to ensure pink tone instead of blue */
+    .footer-col a {
+      color: #d65a7f;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      transition: opacity 0.25s ease, color 0.25s ease;
     }
-    .footer-col .credit-link:hover{
-      opacity:1;
+    .footer-col a:hover {
+      opacity: 0.8;
+      color: #b54265;
+    }
+    .footer-col .credit-link {
+      font-family: inherit;
+      font-size: 0.85em;
+      opacity: 0.85;
     }
   </style>
 
   <!-- Supabase -->
- <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 
 <body>
@@ -1066,6 +1069,7 @@
     </div>
 
   </section>
+
   <!-- =========================
        WHY SHOP WITH US
   ========================== -->
@@ -1272,7 +1276,7 @@
       </p>
 
       <p>
-        Facebook: @Orbead
+        Facebook: <a href="https://www.facebook.com/share/1EgfHec3TW/" target="_blank">@Orbead</a>
       </p>
 
       <p>
