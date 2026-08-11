@@ -12,6 +12,21 @@
 
   <!-- CSS -->
   <link rel="stylesheet" href="style.css">
+  <style>
+    /* credit line — inherits the footer's own color/font so it blends in
+       rather than introducing a new color that might clash */
+    .footer-col .credit-link{
+      font-family:inherit;
+      font-size:.85em;
+      opacity:.75;
+      text-decoration:underline;
+      text-underline-offset:3px;
+      transition:opacity .25s ease;
+    }
+    .footer-col .credit-link:hover{
+      opacity:1;
+    }
+  </style>
 
   <!-- Supabase -->
  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -1261,7 +1276,7 @@
       </p>
 
       <p>
-        <a href="https://your-sitepls-url.com" target="_blank">by site.pls</a>
+        <a href="https://sitepls.github.io" target="_blank" class="credit-link">by site.pls</a>
       </p>
 
     </div>
