@@ -26,6 +26,18 @@ const SHIPPING_OUTSIDE_DHAKA = 130;
 
 
 // =====================================================
+// BUY X GET Y FREE RULES
+// =====================================================
+// Keyed by the product's data-name. "every" = how many PAID
+// units trigger a free unit, "free" = how many free units
+// that unlocks. Repeats automatically (6 paid -> 2 free, etc).
+
+const FREE_ITEM_RULES = {
+  "Mystery Bag": { every: 3, free: 1 }
+};
+
+
+// =====================================================
 // FORMSPREE
 // =====================================================
 
@@ -252,6 +264,257 @@ function updateProductStockUI(id, stock) {
 
 
 // =====================================================
+// CONFETTI CELEBRATION (Buy X Get Y Free)
+// =====================================================
+
+let confettiStylesInjected = false;
+
+function injectConfettiStyles() {
+
+  if (confettiStylesInjected) return;
+
+  const style = document.createElement("style");
+
+  style.textContent = `
+    .confetti-burst {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 9999;
+    }
+
+    .confetti-piece {
+      position: absolute;
+      top: -10vh;
+      will-change: transform, opacity;
+      animation-name: confetti-fall;
+      animation-timing-function: ease-in;
+      animation-fill-mode: forwards;
+    }
+
+    @keyframes confetti-fall {
+      0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(115vh) rotate(540deg);
+        opacity: 0.9;
+      }
+    }
+
+    .free-item-toast {
+      position: fixed;
+      top: 18px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-20px);
+      background: #ff4d6d;
+      color: #fff;
+      font-weight: 700;
+      padding: 12px 22px;
+      border-radius: 999px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.18);
+      z-index: 10000;
+      opacity: 0;
+      transition: opacity 0.3s ease, transform 0.3s ease;
+      pointer-events: none;
+      text-align: center;
+      font-family: inherit;
+    }
+
+    .free-item-toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+  `;
+
+  document.head.appendChild(style);
+
+  confettiStylesInjected = true;
+
+}
+
+function triggerFreeItemCelebration(freeCount) {
+
+  injectConfettiStyles();
+
+  const emojis = ["🎉", "✨", "🎊", "💖", "⭐", "🥳"];
+
+  const burst = document.createElement("div");
+
+  burst.className = "confetti-burst";
+
+  const pieceCount = 30;
+
+  for (let i = 0; i < pieceCount; i++) {
+
+    const piece = document.createElement("span");
+
+    piece.className = "confetti-piece";
+
+    piece.textContent =
+      emojis[Math.floor(Math.random() * emojis.length)];
+
+    piece.style.left = `${Math.random() * 100}vw`;
+
+    piece.style.fontSize = `${14 + Math.random() * 16}px`;
+
+    piece.style.animationDuration = `${1.8 + Math.random() * 1.4}s`;
+
+    piece.style.animationDelay = `${Math.random() * 0.35}s`;
+
+    burst.appendChild(piece);
+
+  }
+
+  document.body.appendChild(burst);
+
+  setTimeout(() => {
+    burst.remove();
+  }, 3500);
+
+  const toast = document.createElement("div");
+
+  toast.className = "free-item-toast";
+
+  toast.textContent =
+    freeCount > 1
+      ? `🎉 You unlocked ${freeCount} FREE Mystery Bags!`
+      : `🎉 You unlocked 1 FREE Mystery Bag!`;
+
+  document.body.appendChild(toast);
+
+  requestAnimationFrame(() => {
+    toast.classList.add("show");
+  });
+
+  setTimeout(() => {
+
+    toast.classList.remove("show");
+
+    setTimeout(() => toast.remove(), 350);
+
+  }, 2200);
+
+}
+
+
+// =====================================================
+// ADD TO CART (shared by featured button + product modal)
+// =====================================================
+// Handles normal items exactly like before. For items listed in
+// FREE_ITEM_RULES (currently just "Mystery Bag"), every N PAID
+// units automatically grants a free unit — the free unit is added
+// to the cart's quantity (and to what gets taken out of stock /
+// shipped) but is NOT charged for.
+
+function addToCart(name, price, stock, type = "") {
+
+  const existingItem =
+    cart.find(
+      (item) =>
+        item.name === name &&
+        item.type === type
+    );
+
+  const currentPaidQty =
+    existingItem
+      ? existingItem.paidQty
+      : 0;
+
+  const previousFreeQty =
+    existingItem
+      ? (existingItem.freeQty || 0)
+      : 0;
+
+  const newPaidQty =
+    currentPaidQty + 1;
+
+  const rule =
+    FREE_ITEM_RULES[name];
+
+  const newFreeQty =
+    rule
+      ? Math.floor(newPaidQty / rule.every) * rule.free
+      : 0;
+
+  const newTotalQty =
+    newPaidQty + newFreeQty;
+
+  if (stock <= 0) {
+
+    alert(
+      `"${type || name}" is sold out! 🥲`
+    );
+
+    return;
+
+  }
+
+  if (newTotalQty > stock) {
+
+    alert(
+      `Sorry, only ${stock} of "${type || name}" is available!`
+    );
+
+    return;
+
+  }
+
+  if (existingItem) {
+
+    existingItem.paidQty = newPaidQty;
+
+    existingItem.freeQty = newFreeQty;
+
+    existingItem.quantity = newTotalQty;
+
+    existingItem.stock = stock;
+
+  } else {
+
+    cart.push({
+
+      name: name,
+
+      type: type,
+
+      price: price,
+
+      paidQty: newPaidQty,
+
+      freeQty: newFreeQty,
+
+      quantity: newTotalQty,
+
+      stock: stock
+
+    });
+
+  }
+
+  updateCartDisplay();
+
+  cartPanel.classList.add(
+    "cart-open"
+  );
+
+  if (rule && newFreeQty > previousFreeQty) {
+
+    const justUnlocked =
+      newFreeQty - previousFreeQty;
+
+    triggerFreeItemCelebration(
+      justUnlocked
+    );
+
+  }
+
+}
+
+
+// =====================================================
 // OPEN PRODUCT MODAL
 // =====================================================
 
@@ -432,72 +695,11 @@ document
           );
 
 
-        const existingItem =
-          cart.find(
-            (item) =>
-              item.name === name &&
-              !item.type
-          );
-
-
-        const currentQty =
-          existingItem
-            ? existingItem.quantity
-            : 0;
-
-
-        if (stock <= 0) {
-
-          alert(
-            `"${name}" is sold out! 🥲`
-          );
-
-          return;
-
-        }
-
-
-        if (
-          currentQty >= stock
-        ) {
-
-          alert(
-            `Sorry, only ${stock} of "${name}" is available!`
-          );
-
-          return;
-
-        }
-
-
-        if (existingItem) {
-
-          existingItem.quantity += 1;
-
-        } else {
-
-          cart.push({
-
-            name: name,
-
-            type: "",
-
-            price: price,
-
-            quantity: 1,
-
-            stock: stock
-
-          });
-
-        }
-
-
-        updateCartDisplay();
-
-
-        cartPanel.classList.add(
-          "cart-open"
+        addToCart(
+          name,
+          price,
+          stock,
+          ""
         );
 
       }
@@ -599,66 +801,16 @@ modalAddToCartBtn.addEventListener(
     }
 
 
-    const existingItem =
-      cart.find(
-        (item) =>
-          item.name === name &&
-          item.type === type
-      );
-
-
-    const currentQtyInCart =
-      existingItem
-        ? existingItem.quantity
-        : 0;
-
-
-    if (
-      currentQtyInCart >= stock
-    ) {
-
-      alert(
-        `Sorry, only ${stock} available!`
-      );
-
-      return;
-
-    }
-
-
-    if (existingItem) {
-
-      existingItem.quantity += 1;
-
-    } else {
-
-      cart.push({
-
-        name: name,
-
-        type: type,
-
-        price: price,
-
-        quantity: 1,
-
-        stock: stock
-
-      });
-
-    }
-
-
-    updateCartDisplay();
+    addToCart(
+      name,
+      price,
+      stock,
+      type
+    );
 
 
     productModal.classList.remove(
       "modal-open"
-    );
-
-
-    cartPanel.classList.add(
-      "cart-open"
     );
 
   }
@@ -788,9 +940,18 @@ function updateCartDisplay() {
   cart.forEach(
     (item, index) => {
 
+      const paidQty =
+        item.paidQty !== undefined
+          ? item.paidQty
+          : item.quantity;
+
+      const freeQty =
+        item.freeQty || 0;
+
+
       total +=
         item.price *
-        item.quantity;
+        paidQty;
 
 
       itemCount +=
@@ -814,14 +975,20 @@ function updateCartDisplay() {
           : "";
 
 
+      const freeText =
+        freeQty > 0
+          ? ` <span style="color:#ff4d6d; font-weight:700;">(${freeQty} free!)</span>`
+          : "";
+
+
       itemRow.innerHTML = `
 
         <span>
-          ${item.name}${typeText} x${item.quantity}
+          ${item.name}${typeText} x${item.quantity}${freeText}
         </span>
 
         <span>
-          ${item.price * item.quantity} Taka
+          ${item.price * paidQty} Taka
         </span>
 
         <button
@@ -1432,9 +1599,14 @@ checkoutForm.addEventListener(
     cart.forEach(
       (item) => {
 
+        const paidQty =
+          item.paidQty !== undefined
+            ? item.paidQty
+            : item.quantity;
+
         subtotal +=
           item.price *
-          item.quantity;
+          paidQty;
 
       }
     );
@@ -1509,13 +1681,26 @@ checkoutForm.addEventListener(
             : "";
 
 
+        const paidQty =
+          item.paidQty !== undefined
+            ? item.paidQty
+            : item.quantity;
+
+        const freeQty =
+          item.freeQty || 0;
+
         const itemTotal =
           item.price *
-          item.quantity;
+          paidQty;
+
+        const freeNote =
+          freeQty > 0
+            ? ` (incl. ${freeQty} free!)`
+            : "";
 
 
         summary +=
-          `- ${item.name}${typeText} x${item.quantity} — ${itemTotal} Taka\n`;
+          `- ${item.name}${typeText} x${item.quantity}${freeNote} — ${itemTotal} Taka\n`;
 
       }
     );
