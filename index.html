@@ -29,6 +29,19 @@
       font-size: 0.85em;
       opacity: 0.85;
     }
+
+    /* Mystery Bag promo badge - inline so no separate CSS file edit is required */
+    #mystery-bag .promo-badge {
+      display: inline-block;
+      background: #ff4d6d;
+      color: #fff;
+      font-weight: 700;
+      font-size: 0.85rem;
+      padding: 6px 14px;
+      border-radius: 999px;
+      margin-bottom: 10px;
+      letter-spacing: 0.3px;
+    }
   </style>
 
   <!-- Supabase -->
@@ -328,6 +341,27 @@
 
       <div
         class="collection-card"
+        data-category="mystery-box"
+      >
+
+        <img
+          src="images/mysterybox.jpg"
+          alt="Mystery Bags collection"
+        >
+
+        <h3>
+          Mystery Bags
+        </h3>
+
+        <p>
+          99 Taka surprise grabs — buy 3, get 1 free.
+        </p>
+
+      </div>
+
+
+      <div
+        class="collection-card"
         data-category="bracelets"
       >
 
@@ -415,6 +449,58 @@
 
 
   <!-- =========================
+       MYSTERY BAG (MAIN PROMO)
+  ========================== -->
+
+  <section
+    class="featured"
+    id="mystery-bag"
+  >
+
+    <img
+      src="images/mysterybox.jpg"
+      alt="Mystery Bag"
+    >
+
+    <div
+      class="featured-info"
+      data-name="Mystery Bag"
+      data-price="99"
+      data-stock="50"
+      data-category="mystery-box"
+    >
+
+      <p class="promo-badge">
+        🔥 BUY 3, GET 1 FREE
+      </p>
+
+      <p class="label">
+        FEATURED PRODUCT
+      </p>
+
+      <h2>
+        Mystery Bag
+      </h2>
+
+      <p>
+        A surprise pouch of handmade beaded goodies for just 99 Taka —
+        grab 3 and we'll throw in a 4th one completely free!
+      </p>
+
+      <p class="price">
+        99 Taka
+      </p>
+
+      <button class="add-to-cart-btn">
+        Add to Cart
+      </button>
+
+    </div>
+
+  </section>
+
+
+  <!-- =========================
        FEATURED PRODUCT
   ========================== -->
 
@@ -478,30 +564,30 @@
     <div class="product-list">
 
 
-      <!-- BRACELETS -->
+      <!-- MYSTERY BAGS -->
 
       <div
         class="product"
-        data-category="bracelets"
-        data-name="Beaded Gold Bracelet"
-        data-price="120"
-        data-stock="3"
-        data-description="A warm, golden beaded accent designed to add subtle radiance to your wrist stack."
+        data-category="mystery-box"
+        data-name="Mystery Bag"
+        data-price="99"
+        data-stock="50"
+        data-description="A surprise pouch of handmade beaded goodies for just 99 Taka. Buy 3, get 1 free — mix and match with anything else in your cart!"
       >
 
         <img
-          src="images/goldpearl-bracelet.jpg"
-          alt="Gold pearl bracelet"
+          src="images/mysterybox.jpg"
+          alt="Mystery Bag"
         >
 
         <div class="product-info">
 
           <h3>
-            Beaded Gold Bracelet
+            Mystery Bag
           </h3>
 
           <p>
-            120 Taka
+            99 Taka
           </p>
 
         </div>
@@ -512,6 +598,8 @@
 
       </div>
 
+
+      <!-- BRACELETS -->
 
       <div
         class="product"
@@ -830,155 +918,6 @@
       <div
         class="product"
         data-category="phone-charms"
-        data-name="Spider-Gwen Phone Charm"
-        data-price="120"
-        data-stock="4"
-        data-description="Pink, white, and black beaded charm inspired by Ghost-Spider aesthetic."
-      >
-
-        <img
-          src="images/gwenphonecharm.jpg"
-          alt="Spider-Gwen phone charm"
-        >
-
-        <div class="product-info">
-
-          <h3>
-            Spider-Gwen Phone Charm
-          </h3>
-
-          <p>
-            120 Taka
-          </p>
-
-        </div>
-
-        <button class="open-modal-btn">
-          View Details
-        </button>
-
-      </div>
-
-
-      <div
-        class="product"
-        data-category="phone-charms"
-        data-name="Butterfly Phone Charm"
-        data-price="160"
-        data-stock="2"
-        data-description="Whimsical iridescent butterfly accents that bring pastel aesthetic joy to your phone."
-      >
-
-        <img
-          src="images/butterfly.jpg"
-          alt="Butterfly Phone Charm"
-        >
-
-        <div class="product-info">
-
-          <h3>
-            Butterfly Phone Charm
-          </h3>
-
-          <p>
-            160 Taka
-          </p>
-
-          <select
-            class="product-type"
-            style="display:none;"
-          >
-
-            <option value="">
-              -- Select Type --
-            </option>
-
-            <option
-              value="Lilac butterfly"
-              data-stock="1"
-            >
-              Lilac butterfly 
-            </option>
-
-            <option
-              value="Green butterfly"
-              data-stock="2"
-            >
-              Green butterfly 
-            </option>
-
-          </select>
-
-        </div>
-
-        <button class="open-modal-btn">
-          View Details
-        </button>
-
-      </div>
-
-
-      <div
-        class="product"
-        data-category="phone-charms"
-        data-name="Yellow and Lilac Phone Charm"
-        data-price="160"
-        data-stock="2"
-        data-description="Soft pastel aesthetic beaded loop strap—choose between honey yellow or soothing lilac shades!"
-      >
-
-        <img
-          src="images/yellowlilac.jpg"
-          alt="Yellow and lilac phone charm"
-        >
-
-        <div class="product-info">
-
-          <h3>
-            Yellow and Lilac Phone Charm
-          </h3>
-
-          <p>
-            160 Taka
-          </p>
-
-          <select
-            class="product-type"
-            style="display:none;"
-          >
-
-            <option value="">
-              -- Select Type --
-            </option>
-
-            <option
-              value="Yellow phone charm"
-              data-stock="1"
-            >
-              Yellow phone charm 
-            </option>
-
-            <option
-              value="Lilac phone charm"
-              data-stock="1"
-            >
-              Lilac phone charm 
-            </option>
-
-          </select>
-
-        </div>
-
-        <button class="open-modal-btn">
-          View Details
-        </button>
-
-      </div>
-
-
-      <div
-        class="product"
-        data-category="phone-charms"
         data-name="Sanrio Phone Charm"
         data-price="150"
         data-stock="2"
@@ -1024,39 +963,6 @@
             </option>
 
           </select>
-
-        </div>
-
-        <button class="open-modal-btn">
-          View Details
-        </button>
-
-      </div>
-
-
-      <div
-        class="product"
-        data-category="phone-charms"
-        data-name="Peach Phone Charm"
-        data-price="150"
-        data-stock="3"
-        data-description="Adorable sweet peach glass beads strung on a durable hanging cord."
-      >
-
-        <img
-          src="images/peachphonecharm.jpg"
-          alt="Peach phone charm"
-        >
-
-        <div class="product-info">
-
-          <h3>
-            Peach Phone Charm
-          </h3>
-
-          <p>
-            150 Taka
-          </p>
 
         </div>
 
