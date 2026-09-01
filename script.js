@@ -267,135 +267,133 @@ function updateProductStockUI(id, stock) {
 // CONFETTI CELEBRATION (Buy X Get Y Free)
 // =====================================================
 
-let confettiStylesInjected = false;
-
-function injectConfettiStyles() {
-
-  if (confettiStylesInjected) return;
-
-  const style = document.createElement("style");
-
-  style.textContent = `
-    .confetti-burst {
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      overflow: hidden;
-      z-index: 9999;
-    }
-
-    .confetti-piece {
-      position: absolute;
-      top: -10vh;
-      will-change: transform, opacity;
-      animation-name: confetti-fall;
-      animation-timing-function: ease-in;
-      animation-fill-mode: forwards;
-    }
-
-    @keyframes confetti-fall {
-      0% {
-        transform: translateY(0) rotate(0deg);
-        opacity: 1;
-      }
-      100% {
-        transform: translateY(115vh) rotate(540deg);
-        opacity: 0.9;
-      }
-    }
-
-    .free-item-toast {
-      position: fixed;
-      top: 18px;
-      left: 50%;
-      transform: translateX(-50%) translateY(-20px);
-      background: #ff4d6d;
-      color: #fff;
-      font-weight: 700;
-      padding: 12px 22px;
-      border-radius: 999px;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.18);
-      z-index: 10000;
-      opacity: 0;
-      transition: opacity 0.3s ease, transform 0.3s ease;
-      pointer-events: none;
-      text-align: center;
-      font-family: inherit;
-    }
-
-    .free-item-toast.show {
-      opacity: 1;
-      transform: translateX(-50%) translateY(0);
-    }
-  `;
-
-  document.head.appendChild(style);
-
-  confettiStylesInjected = true;
-
-}
+// Max possible z-index, set inline (not via a stylesheet), so nothing
+// on the page — including the cart panel that slides open right after —
+// can end up layered on top of and hiding the celebration.
+const CELEBRATION_Z_INDEX = 2147483647;
 
 function triggerFreeItemCelebration(freeCount) {
-
-  injectConfettiStyles();
 
   const emojis = ["🎉", "✨", "🎊", "💖", "⭐", "🥳"];
 
   const burst = document.createElement("div");
 
-  burst.className = "confetti-burst";
+  Object.assign(burst.style, {
+    position: "fixed",
+    top: "0",
+    left: "0",
+    width: "100vw",
+    height: "100vh",
+    pointerEvents: "none",
+    overflow: "hidden",
+    zIndex: String(CELEBRATION_Z_INDEX)
+  });
 
-  const pieceCount = 30;
+  document.body.appendChild(burst);
+
+  const pieceCount = 34;
 
   for (let i = 0; i < pieceCount; i++) {
 
     const piece = document.createElement("span");
 
-    piece.className = "confetti-piece";
-
     piece.textContent =
       emojis[Math.floor(Math.random() * emojis.length)];
 
-    piece.style.left = `${Math.random() * 100}vw`;
+    const size =
+      16 + Math.random() * 18;
 
-    piece.style.fontSize = `${14 + Math.random() * 16}px`;
-
-    piece.style.animationDuration = `${1.8 + Math.random() * 1.4}s`;
-
-    piece.style.animationDelay = `${Math.random() * 0.35}s`;
+    Object.assign(piece.style, {
+      position: "absolute",
+      left: `${Math.random() * 100}vw`,
+      top: "-40px",
+      fontSize: `${size}px`,
+      lineHeight: "1",
+      willChange: "transform, opacity"
+    });
 
     burst.appendChild(piece);
 
-  }
+    const duration =
+      1800 + Math.random() * 1400;
 
-  document.body.appendChild(burst);
+    const delay =
+      Math.random() * 300;
+
+    const rotation =
+      360 + Math.random() * 360;
+
+    const drift =
+      (Math.random() - 0.5) * 120;
+
+    // Web Animations API — runs entirely from JS, so it can't be
+    // hidden by a missing/overridden stylesheet rule.
+    piece.animate(
+      [
+        {
+          transform: "translate(0, 0) rotate(0deg)",
+          opacity: 1
+        },
+        {
+          transform: `translate(${drift}px, 115vh) rotate(${rotation}deg)`,
+          opacity: 0.9
+        }
+      ],
+      {
+        duration: duration,
+        delay: delay,
+        easing: "ease-in",
+        fill: "forwards"
+      }
+    );
+
+  }
 
   setTimeout(() => {
     burst.remove();
-  }, 3500);
+  }, 3600);
 
   const toast = document.createElement("div");
-
-  toast.className = "free-item-toast";
 
   toast.textContent =
     freeCount > 1
       ? `🎉 You unlocked ${freeCount} FREE Mystery Bags!`
       : `🎉 You unlocked 1 FREE Mystery Bag!`;
 
+  Object.assign(toast.style, {
+    position: "fixed",
+    top: "18px",
+    left: "50%",
+    transform: "translateX(-50%) translateY(-20px)",
+    background: "#ff4d6d",
+    color: "#fff",
+    fontWeight: "700",
+    padding: "12px 22px",
+    borderRadius: "999px",
+    boxShadow: "0 8px 20px rgba(0,0,0,0.18)",
+    zIndex: String(CELEBRATION_Z_INDEX),
+    opacity: "0",
+    transition: "opacity 0.3s ease, transform 0.3s ease",
+    pointerEvents: "none",
+    textAlign: "center",
+    fontFamily: "inherit"
+  });
+
   document.body.appendChild(toast);
 
   requestAnimationFrame(() => {
-    toast.classList.add("show");
+    toast.style.opacity = "1";
+    toast.style.transform = "translateX(-50%) translateY(0)";
   });
 
   setTimeout(() => {
 
-    toast.classList.remove("show");
+    toast.style.opacity = "0";
+    toast.style.transform = "translateX(-50%) translateY(-20px)";
 
     setTimeout(() => toast.remove(), 350);
 
-  }, 2200);
+  }, 2400);
 
 }
 
@@ -496,17 +494,28 @@ function addToCart(name, price, stock, type = "") {
 
   updateCartDisplay();
 
-  cartPanel.classList.add(
-    "cart-open"
-  );
+  const justCelebrated =
+    rule && newFreeQty > previousFreeQty;
 
-  if (rule && newFreeQty > previousFreeQty) {
+  if (justCelebrated) {
 
     const justUnlocked =
       newFreeQty - previousFreeQty;
 
     triggerFreeItemCelebration(
       justUnlocked
+    );
+
+    // Give the confetti a beat on screen before the cart panel
+    // slides in and covers most of the viewport.
+    setTimeout(() => {
+      cartPanel.classList.add("cart-open");
+    }, 900);
+
+  } else {
+
+    cartPanel.classList.add(
+      "cart-open"
     );
 
   }
