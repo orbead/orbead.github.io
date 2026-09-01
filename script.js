@@ -274,7 +274,17 @@ const CELEBRATION_Z_INDEX = 2147483647;
 
 function triggerFreeItemCelebration(freeCount) {
 
-  const emojis = ["🎉", "✨", "🎊", "💖", "⭐", "🥳"];
+  // Cake-sprinkle palette — little rod shapes, not emoji.
+  const sprinkleColors = [
+    "#ff6b9d",
+    "#ffd93d",
+    "#6bcfef",
+    "#a685e2",
+    "#7ee787",
+    "#ff9f68",
+    "#ff4d6d",
+    "#fff176"
+  ];
 
   const burst = document.createElement("div");
 
@@ -291,40 +301,56 @@ function triggerFreeItemCelebration(freeCount) {
 
   document.body.appendChild(burst);
 
-  const pieceCount = 34;
+  const pieceCount = 70;
 
   for (let i = 0; i < pieceCount; i++) {
 
-    const piece = document.createElement("span");
+    const piece = document.createElement("div");
 
-    piece.textContent =
-      emojis[Math.floor(Math.random() * emojis.length)];
+    const color =
+      sprinkleColors[
+        Math.floor(Math.random() * sprinkleColors.length)
+      ];
 
-    const size =
-      16 + Math.random() * 18;
+    // Most pieces are thin rods (classic jimmies), a few are
+    // small round dots (nonpareils) for variety.
+    const isRound =
+      Math.random() < 0.25;
+
+    const length =
+      isRound
+        ? 5 + Math.random() * 3
+        : 9 + Math.random() * 8;
+
+    const thickness =
+      isRound
+        ? length
+        : 3 + Math.random() * 2;
 
     Object.assign(piece.style, {
       position: "absolute",
       left: `${Math.random() * 100}vw`,
-      top: "-40px",
-      fontSize: `${size}px`,
-      lineHeight: "1",
+      top: "-20px",
+      width: `${length}px`,
+      height: `${thickness}px`,
+      background: color,
+      borderRadius: isRound ? "50%" : `${thickness / 2}px`,
       willChange: "transform, opacity"
     });
 
     burst.appendChild(piece);
 
     const duration =
-      1800 + Math.random() * 1400;
+      1600 + Math.random() * 1300;
 
     const delay =
       Math.random() * 300;
 
     const rotation =
-      360 + Math.random() * 360;
+      180 + Math.random() * 540;
 
     const drift =
-      (Math.random() - 0.5) * 120;
+      (Math.random() - 0.5) * 140;
 
     // Web Animations API — runs entirely from JS, so it can't be
     // hidden by a missing/overridden stylesheet rule.
@@ -336,7 +362,7 @@ function triggerFreeItemCelebration(freeCount) {
         },
         {
           transform: `translate(${drift}px, 115vh) rotate(${rotation}deg)`,
-          opacity: 0.9
+          opacity: 0.95
         }
       ],
       {
@@ -990,11 +1016,45 @@ function updateCartDisplay() {
           : "";
 
 
+      const qtyBtnStyle =
+        "width:26px; height:26px; border:none; border-radius:6px; " +
+        "background:#ffe3ea; color:#d65a7f; font-weight:700; " +
+        "font-size:16px; line-height:1; cursor:pointer;";
+
+
       itemRow.innerHTML = `
 
-        <span>
-          ${item.name}${typeText} x${item.quantity}${freeText}
-        </span>
+        <div style="display:flex; flex-direction:column; gap:6px;">
+
+          <span>
+            ${item.name}${typeText}${freeText}
+          </span>
+
+          <div style="display:flex; align-items:center; gap:8px;">
+
+            <button
+              class="qty-decrease-btn"
+              data-index="${index}"
+              style="${qtyBtnStyle}"
+            >
+              −
+            </button>
+
+            <span style="min-width:18px; text-align:center; font-weight:600;">
+              ${paidQty}
+            </span>
+
+            <button
+              class="qty-increase-btn"
+              data-index="${index}"
+              style="${qtyBtnStyle}"
+            >
+              +
+            </button>
+
+          </div>
+
+        </div>
 
         <span>
           ${item.price * paidQty} Taka
@@ -1067,6 +1127,121 @@ function updateCartDisplay() {
       );
 
     });
+
+
+  document
+    .querySelectorAll(
+      ".qty-increase-btn"
+    )
+    .forEach((btn) => {
+
+      btn.addEventListener(
+        "click",
+        () => {
+
+          const index =
+            Number(
+              btn.dataset.index
+            );
+
+          const item =
+            cart[index];
+
+          if (!item) return;
+
+          // Reuses the exact same stock-check / free-item /
+          // celebration logic as the product's Add to Cart button.
+          addToCart(
+            item.name,
+            item.price,
+            item.stock,
+            item.type
+          );
+
+        }
+      );
+
+    });
+
+
+  document
+    .querySelectorAll(
+      ".qty-decrease-btn"
+    )
+    .forEach((btn) => {
+
+      btn.addEventListener(
+        "click",
+        () => {
+
+          const index =
+            Number(
+              btn.dataset.index
+            );
+
+          decrementCartItem(
+            index
+          );
+
+        }
+      );
+
+    });
+
+}
+
+
+// =====================================================
+// DECREASE ITEM QUANTITY FROM CART
+// =====================================================
+// Mirrors addToCart's free-item math in reverse: drops the paid
+// quantity by 1, recalculates how many free units that still
+// unlocks, and removes the item entirely once it hits zero.
+
+function decrementCartItem(index) {
+
+  const item =
+    cart[index];
+
+  if (!item) return;
+
+  const currentPaidQty =
+    item.paidQty !== undefined
+      ? item.paidQty
+      : item.quantity;
+
+  const newPaidQty =
+    currentPaidQty - 1;
+
+  if (newPaidQty <= 0) {
+
+    cart.splice(
+      index,
+      1
+    );
+
+    updateCartDisplay();
+
+    return;
+
+  }
+
+  const rule =
+    FREE_ITEM_RULES[item.name];
+
+  const newFreeQty =
+    rule
+      ? Math.floor(newPaidQty / rule.every) * rule.free
+      : 0;
+
+  item.paidQty = newPaidQty;
+
+  item.freeQty = newFreeQty;
+
+  item.quantity =
+    newPaidQty + newFreeQty;
+
+  updateCartDisplay();
 
 }
 
