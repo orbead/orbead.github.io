@@ -391,7 +391,7 @@ function triggerFreeItemCelebration(freeCount) {
     top: "18px",
     left: "50%",
     transform: "translateX(-50%) translateY(-20px)",
-    background: "#ff4d6d",
+    background: "#FF3E9A",
     color: "#fff",
     fontWeight: "700",
     padding: "12px 22px",
@@ -1012,7 +1012,7 @@ function updateCartDisplay() {
 
       const freeText =
         freeQty > 0
-          ? ` <span style="color:#ff4d6d; font-weight:700;">(${freeQty} free!)</span>`
+          ? ` <span style="color:#FF3E9A; font-weight:700;">(${freeQty} free!)</span>`
           : "";
 
 
